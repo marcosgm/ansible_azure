@@ -1,0 +1,21 @@
+---
+- name: Delete Azure Resources
+  hosts: localhost
+  connection: local
+  tasks:
+        - name: Delete storage account "{{az_storageAccountName}}"
+          azure_rm_storageaccount:
+                  name: "{{az_storageAccountName}}"
+                  resource_group: "{{ az_resourceGroupName }}"
+                  state: absent
+  
+        - name: Delete security group "{{ az_networkSecurityGroup }}"
+          azure_rm_securitygroup:
+                  name: "{{ az_networkSecurityGroup }}"
+                  resource_group: "{{ az_resourceGroupName }}"
+                  state: absent
+
+        - name: Delete a resource group "{{ az_resourceGroupName }}"
+          azure_rm_resourcegroup:
+            name: "{{ az_resourceGroupName }}"
+            state: absent

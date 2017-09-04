@@ -1,0 +1,9 @@
+---
+az_location: "eastus"
+az_resourceGroupName: "testRG"
+az_tagvalue: "testing"
+az_vnetName: "test-vnet"
+az_subnetName: "default"
+az_subnetAddressPrefix: "10.0.0.0/24"
+az_networkSecurityGroup: "test-nsg"
+az_storageAccountName: "test-storage"

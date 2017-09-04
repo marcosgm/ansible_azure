@@ -1,0 +1,57 @@
+---
+- name: Create Azure Resources
+  hosts: localhost
+  connection: local
+  tasks:
+        - name: Create a resource group named "{{ az_resourceGroupName }}" in "{{ az_location }}"
+          register: state
+          azure_rm_resourcegroup:
+            name: "{{ az_resourceGroupName }}"
+            location: "{{ az_location }}"
+            tags:
+                maintag: "{{ az_tagvalue }}"
+                delete: never
+        - debug: var=state
+
+        - name: List facts of this new RG "{{ az_resourceGroupName }}"
+          register: azure_resourcegroups 
+          azure_rm_resourcegroup_facts:
+                name: "{{ az_resourceGroupName }}"
+        - debug: var=azure_resourcegroups
+
+        - name: Create security group "{{ az_networkSecurityGroup }}"
+          azure_rm_securitygroup:
+            resource_group: "{{ az_resourceGroupName }}"
+            name: "{{ az_networkSecurityGroup }}"
+            purge_rules: yes
+            rules:
+                  - name: 'AllowSSH'
+                    protocol: Tcp
+                    source_address_prefix: '*'
+                    destination_port_range: 22
+                    access: Allow
+                    priority: 101
+                    direction: Inbound
+                  - name: 'AllowHTTP'
+                    protocol: Tcp
+                    source_address_prefix: '*'
+                    destination_port_range: 80
+                    access: Allow
+                    priority: 102
+                    direction: Inbound
+                  - name: 'AllowHTPS'
+                    protocol: Tcp
+                    source_address_prefix: '*'
+                    destination_port_range: 443
+                    access: Allow
+                    priority: 103
+                    direction: Inbound
+        - name: Create storage account "{{az_storageAccountName}}"
+          azure_rm_storageaccount:
+                  name: "{{az_storageAccountName}}"
+                  resource_group: "{{ az_resourceGroupName }}"
+                  type: Standard_LRS
+                  tags:
+                      maintag: "{{ az_tagvalue }}"
+                      delete: on-exit
+
