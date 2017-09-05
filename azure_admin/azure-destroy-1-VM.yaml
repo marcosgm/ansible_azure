@@ -8,3 +8,6 @@
             resource_group: "{{ az_resourceGroupName }}"
             name: TESTVM000
             state: absent
+            remove_on_absent:
+                - network_interfaces
+                - virtual_storage
