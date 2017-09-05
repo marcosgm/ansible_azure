@@ -64,4 +64,5 @@
                   resource_group: "{{ az_resourceGroupName }}"
                   virtual_network_name: "{{az_vNetName}}"
                   address_prefix_cidr: "{{az_subnetAddressPrefix}}"
+                  security_group_name: "{{ az_networkSecurityGroup }}"
 

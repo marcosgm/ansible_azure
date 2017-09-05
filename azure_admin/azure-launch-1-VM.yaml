@@ -8,6 +8,8 @@
           azure_rm_virtualmachine:
             resource_group: "{{ az_resourceGroupName }}"
             name: TESTVM000
+            storage_account: "{{ az_storageAccountName }}"
+            virtual_network_name : "{{ az_vNetName }}"
             admin_username: testadmin
             admin_password: test-password-012346789
             image:
