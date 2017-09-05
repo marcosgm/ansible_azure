@@ -1,0 +1,10 @@
+---
+- name: Destroy 1 VM in Azure
+  hosts: localhost
+  connection: local
+  tasks:
+        - name: Destroy the VM named TEST in "{{ az_resourceGroupName }}"
+          azure_rm_virtualmachine:
+            resource_group: "{{ az_resourceGroupName }}"
+            name: TESTVM000
+            state: absent

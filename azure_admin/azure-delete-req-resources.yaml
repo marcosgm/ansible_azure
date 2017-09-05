@@ -3,6 +3,12 @@
   hosts: localhost
   connection: local
   tasks:
+        - name: Delete a virtual network
+          azure_rm_virtualnetwork:
+            name: "{{az_vNetName}}"
+            resource_group: "{{ az_resourceGroupName }}"
+            state: absent
+
         - name: Delete storage account "{{az_storageAccountName}}"
           azure_rm_storageaccount:
                   name: "{{az_storageAccountName}}"

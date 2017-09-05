@@ -1,0 +1,12 @@
+---
+- name: List Azure Resources
+  hosts: localhost
+  connection: local
+  tasks:
+        - name: List facts of the RG "{{ az_resourceGroupName }}"
+          register: azure_resourcegroups 
+          azure_rm_resourcegroup_facts:
+                name: "{{ az_resourceGroupName }}"
+        - debug: var=azure_resourcegroups
+
+

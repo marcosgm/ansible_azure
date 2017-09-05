@@ -13,17 +13,11 @@
                 delete: never
         - debug: var=state
 
-        - name: List facts of this new RG "{{ az_resourceGroupName }}"
-          register: azure_resourcegroups 
-          azure_rm_resourcegroup_facts:
-                name: "{{ az_resourceGroupName }}"
-        - debug: var=azure_resourcegroups
-
         - name: Create security group "{{ az_networkSecurityGroup }}"
           azure_rm_securitygroup:
             resource_group: "{{ az_resourceGroupName }}"
             name: "{{ az_networkSecurityGroup }}"
-            purge_rules: yes
+            purge_rules: no
             rules:
                   - name: 'AllowSSH'
                     protocol: Tcp
@@ -54,4 +48,20 @@
                   tags:
                       maintag: "{{ az_tagvalue }}"
                       delete: on-exit
+        - name: Create network "{{az_vNetName}}"
+          azure_rm_virtualnetwork:
+                  name: "{{az_vNetName}}"
+                  resource_group: "{{ az_resourceGroupName }}"
+                  address_prefixes_cidr:
+                          - "{{az_subnetAddressPrefix}}"
+                  tags:
+                      maintag: "{{ az_tagvalue }}"
+                      delete: on-exit
+
+        - name: Create subnetwork "{{az_subnetName}}" "{{az_subnetAddressPrefix}}" for "{{az_vNetName}}"
+          azure_rm_subnet:
+                  name: "{{az_subnetName}}"
+                  resource_group: "{{ az_resourceGroupName }}"
+                  virtual_network_name: "{{az_vNetName}}"
+                  address_prefix_cidr: "{{az_subnetAddressPrefix}}"
 

@@ -1,0 +1,20 @@
+---
+- name: Launch 1 VM in Azure
+  hosts: localhost
+  connection: local
+  tasks:
+        - name: Launch a new VM named TEST in "{{ az_resourceGroupName }}"
+          register: azure_vm 
+          azure_rm_virtualmachine:
+            resource_group: "{{ az_resourceGroupName }}"
+            name: TESTVM000
+            admin_username: testadmin
+            admin_password: test-password-012346789
+            image:
+                    offer: CentOS
+                    publisher: OpenLogic
+                    sku: '7.1'
+                    version: latest
+        - debug: var=azure_vm 
+
+
