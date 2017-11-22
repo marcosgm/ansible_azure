@@ -6,7 +6,7 @@
         - name: Destroy the VM named TEST in "{{ az_resourceGroupName }}"
           azure_rm_virtualmachine:
             resource_group: "{{ az_resourceGroupName }}"
-            name: TESTVM000
+            name: TESTRHEL000
             state: absent
             remove_on_absent:
                 - all

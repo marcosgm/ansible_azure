@@ -7,16 +7,16 @@
           register: azure_vm 
           azure_rm_virtualmachine:
             resource_group: "{{ az_resourceGroupName }}"
-            name: TESTVM000
+            name: TESTRHEL000
             storage_account: "{{ az_storageAccountName }}"
             virtual_network_name : "{{ az_vNetName }}"
             admin_username: testadmin
             admin_password: test-password-012346789
             vm_size: "Standard_A1_v2"
             image:
-                    offer: CentOS
-                    publisher: OpenLogic
-                    sku: '7.1'
+                    offer: rhel-byol
+                    publisher: redhat
+                    sku: 'rhel74'
                     version: latest
         - debug: var=azure_vm 
 
