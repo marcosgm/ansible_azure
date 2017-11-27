@@ -1,0 +1,80 @@
+---
+- name: Launch 3 VMs in Azure
+  hosts: localhost
+  connection: local
+  tasks:
+        - name: Create security group "{{ az_networkSecurityGroup }}"
+          azure_rm_securitygroup:
+            resource_group: "{{ az_resourceGroupName }}"
+            name: "{{ az_networkSecurityGroup }}"
+            purge_rules: no
+            rules:
+                  - name: 'AllowSSH'
+                    protocol: Tcp
+                    source_address_prefix: '*'
+                    destination_port_range: 22
+                    access: Allow
+                    priority: 101
+                    direction: Inbound
+                  - name: 'AllowHTTP'
+                    protocol: Tcp
+                    source_address_prefix: '*'
+                    destination_port_range: 80
+                    access: Allow
+                    priority: 102
+                    direction: Inbound
+                  - name: 'AllowHTPS'
+                    protocol: Tcp
+                    source_address_prefix: '*'
+                    destination_port_range: 443
+                    access: Allow
+                    priority: 103
+                    direction: Inbound
+                  - name: 'AllowGlusterD'
+                    protocol: Tcp
+                    source_address_prefix: '*'
+                    destination_port_range: 24007-24008
+                    access: Allow
+                    priority: 104
+                    direction: Inbound
+                  - name: 'AllowGlusterBricks'
+                    protocol: Tcp
+                    source_address_prefix: '*'
+                    destination_port_range: 49152-49154
+                    access: Allow
+                    priority: 105
+                    direction: Inbound
+        - name: Create storage account "{{az_storageAccountName}}"
+          azure_rm_storageaccount:
+                  name: "{{az_storageAccountName}}"
+                  resource_group: "{{ az_resourceGroupName }}"
+                  type: Standard_LRS
+                  tags:
+                      maintag: "{{ az_tagvalue }}"
+                      delete: on-exit
+        - name: Launch 3 new VMs named TEST in "{{ az_resourceGroupName }}"
+          register: azure_vm 
+          azure_rm_virtualmachine:
+            resource_group: "{{ az_resourceGroupName }}"
+            name: "{{ item.name }}"
+            storage_account: "{{ az_storageAccountName }}"
+            virtual_network_name : "{{ az_vNetName }}"
+            admin_username: testadmin
+            admin_password: test-password-012346789
+            vm_size: "Standard_DS2_v2"
+            remove_on_absent: yes
+            image:
+                    offer: RHEL
+                    publisher: redhat
+                    sku: '7-LVM'
+                    version: latest
+            data_disks:
+                    managed_disk_type: "Standard_LRS"
+                    disk_size_gb: "5"
+          with_items:
+            - { name: 'gluster001',  }
+            - { name: 'gluster002',  }
+            - { name: 'gluster003',  }
+        - debug: var=azure_vm 
+
+

@@ -13,10 +13,11 @@
             admin_username: testadmin
             admin_password: test-password-012346789
             vm_size: "Standard_A1_v2"
+            remove_on_absent: yes
             image:
-                    offer: rhel-byol
+                    offer: RHEL
                     publisher: redhat
-                    sku: 'rhel74'
+                    sku: '7-LVM'
                     version: latest
         - debug: var=azure_vm 
 
