@@ -44,14 +44,6 @@
                     access: Allow
                     priority: 105
                     direction: Inbound
-        - name: Create storage account "{{az_storageAccountName}}"
-          azure_rm_storageaccount:
-                  name: "{{az_storageAccountName}}"
-                  resource_group: "{{ az_resourceGroupName }}"
-                  type: Standard_LRS
-                  tags:
-                      maintag: "{{ az_tagvalue }}"
-                      delete: on-exit
         - name: Launch 3 new VMs named TEST in "{{ az_resourceGroupName }}"
           register: azure_vm 
           azure_rm_virtualmachine:
@@ -69,8 +61,9 @@
                     sku: '7-LVM'
                     version: latest
             data_disks:
-                    managed_disk_type: "Standard_LRS"
-                    disk_size_gb: "5"
+                    - lun: 0
+                      managed_disk_type: Standard_LRS
+                      disk_size_gb: 5
           with_items:
             - { name: 'gluster001',  }
             - { name: 'gluster002',  }
